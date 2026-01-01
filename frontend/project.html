@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project - ZeroMetus</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="dashboard-page">
+    <!-- Sidebar (same as dashboard) -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="dashboard.html" class="sidebar-logo">
+                <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    <path d="M9 12l2 2 4-4"/>
+                </svg>
+                <span>ZeroMetus</span>
+            </a>
+        </div>
+
+        <nav class="sidebar-nav">
+            <div class="nav-section">
+                <span class="nav-section-title">Main</span>
+                <a href="dashboard.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7"/>
+                        <rect x="14" y="3" width="7" height="7"/>
+                        <rect x="14" y="14" width="7" height="7"/>
+                        <rect x="3" y="14" width="7" height="7"/>
+                    </svg>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="nav-item" id="nav-new-scan">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="8" x2="12" y2="16"/>
+                        <line x1="8" y1="12" x2="16" y2="12"/>
+                    </svg>
+                    <span>New Scan</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <span class="nav-section-title">Projects</span>
+                <div class="nav-projects" id="nav-projects">
+                    <!-- Projects loaded dynamically -->
+                </div>
+            </div>
+        </nav>
+
+        <div class="sidebar-footer">
+            <a href="settings.html" class="nav-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="3"/>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                </svg>
+                <span>Settings</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Top Bar -->
+        <header class="topbar">
+            <button class="sidebar-toggle" id="sidebar-toggle">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="3" y1="6" x2="21" y2="6"/>
+                    <line x1="3" y1="12" x2="21" y2="12"/>
+                    <line x1="3" y1="18" x2="21" y2="18"/>
+                </svg>
+            </button>
+
+            <div class="breadcrumb">
+                <a href="dashboard.html">Dashboard</a>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="9 18 15 12 9 6"/>
+                </svg>
+                <span id="breadcrumb-project">Project</span>
+            </div>
+
+            <div class="topbar-actions">
+                <div class="user-menu" id="user-menu">
+                    <button class="user-menu-btn">
+                        <div class="user-avatar" id="user-avatar">JD</div>
+                        <span class="user-name" id="user-name">John Doe</span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"/>
+                        </svg>
+                    </button>
+                    <div class="user-dropdown">
+                        <a href="settings.html">Profile</a>
+                        <a href="settings.html">Settings</a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" id="logout-btn" class="danger">Log out</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Project Content -->
+        <div class="dashboard-content">
+            <!-- Project Header -->
+            <section class="project-header">
+                <div class="project-info">
+                    <div class="project-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                        </svg>
+                    </div>
+                    <div class="project-meta">
+                        <h1 id="project-name">Project Name</h1>
+                        <p id="project-description">Project description will appear here</p>
+                        <div class="project-tags">
+                            <span class="tag" id="project-source">Uploaded</span>
+                            <span class="tag">Last scan: <span id="last-scan-time">Never</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="project-actions">
+                    <button class="btn btn-primary" id="scan-project-btn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        </svg>
+                        Run Scan
+                    </button>
+                    <button class="btn btn-secondary" id="project-settings-btn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="3"/>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                        </svg>
+                        Settings
+                    </button>
+                </div>
+            </section>
+
+            <!-- Security Score Card -->
+            <section class="security-score-section">
+                <div class="score-card">
+                    <div class="score-circle">
+                        <svg viewBox="0 0 36 36" class="score-ring">
+                            <path class="score-ring-bg"
+                                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                                fill="none" stroke="#e5e7eb" stroke-width="3"/>
+                            <path class="score-ring-fill" id="score-ring-fill"
+                                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                                fill="none" stroke="#10b981" stroke-width="3"
+                                stroke-dasharray="0, 100"/>
+                        </svg>
+                        <div class="score-value">
+                            <span id="security-score">--</span>
+                            <span class="score-label">Score</span>
+                        </div>
+                    </div>
+                    <div class="score-details">
+                        <h3>Security Posture</h3>
+                        <p id="score-message">Run a scan to see your security score</p>
+                        <div class="score-breakdown">
+                            <div class="breakdown-item">
+                                <span class="breakdown-label">Critical</span>
+                                <span class="breakdown-value critical" id="score-critical">0</span>
+                            </div>
+                            <div class="breakdown-item">
+                                <span class="breakdown-label">High</span>
+                                <span class="breakdown-value high" id="score-high">0</span>
+                            </div>
+                            <div class="breakdown-item">
+                                <span class="breakdown-label">Medium</span>
+                                <span class="breakdown-value medium" id="score-medium">0</span>
+                            </div>
+                            <div class="breakdown-item">
+                                <span class="breakdown-label">Low</span>
+                                <span class="breakdown-value low" id="score-low">0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Scan History -->
+            <section class="dashboard-card">
+                <div class="card-header">
+                    <h2>Scan History</h2>
+                </div>
+                <div class="scan-history-table" id="scan-history">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Files</th>
+                                <th>Critical</th>
+                                <th>High</th>
+                                <th>Medium</th>
+                                <th>Low</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="scan-history-body">
+                            <!-- Scan history loaded dynamically -->
+                        </tbody>
+                    </table>
+                    
+                    <div class="empty-state hidden" id="empty-scans">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        </svg>
+                        <h3>No scans yet</h3>
+                        <p>Run your first scan to see results here</p>
+                        <button class="btn btn-primary" id="first-scan-btn">Run First Scan</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Files in Project -->
+            <section class="dashboard-card">
+                <div class="card-header">
+                    <h2>Project Files</h2>
+                    <span class="file-count" id="file-count">0 files</span>
+                </div>
+                <div class="files-list" id="files-list">
+                    <!-- Files loaded dynamically -->
+                    <div class="empty-state" id="empty-files">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                        </svg>
+                        <h3>No files uploaded</h3>
+                        <p>Add files to this project to scan them</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script src="js/app.js"></script>
+    <script src="js/project.js"></script>
+</body>
+</html>

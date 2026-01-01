@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZeroMetus - AI Security Agent</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <span class="logo-icon">🛡️</span>
+                <h1>ZeroMetus</h1>
+            </div>
+            <p class="tagline">AI-Powered Security & Vulnerability Detection</p>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Input Section -->
+            <section class="input-section" id="inputSection">
+                <h2>Submit Code for Analysis</h2>
+                
+                <div class="form-group">
+                    <label for="projectName">Project Name</label>
+                    <input type="text" id="projectName" placeholder="my-web-app" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="fileName">Filename</label>
+                    <input type="text" id="fileName" placeholder="app.py" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="codeInput">Paste Your Code</label>
+                    <textarea id="codeInput" placeholder="// Paste your code here for security analysis...
+// Supports: Python, JavaScript, TypeScript, Java, PHP, Ruby, Go, C#
+
+# Example vulnerable Python code:
+user_id = request.args.get('id')
+query = f&quot;SELECT * FROM users WHERE id = {user_id}&quot;
+cursor.execute(query)" rows="15"></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button id="scanBtn" class="btn btn-primary">
+                        <span class="btn-icon">🔍</span>
+                        Scan for Vulnerabilities
+                    </button>
+                    <button id="clearBtn" class="btn btn-secondary">Clear</button>
+                </div>
+            </section>
+
+            <!-- Loading Indicator -->
+            <section class="loading-section hidden" id="loadingSection">
+                <div class="spinner"></div>
+                <p>Scanning code for vulnerabilities...</p>
+                <p class="loading-sub">This may take a few seconds</p>
+            </section>
+
+            <!-- Results Section -->
+            <section class="results-section hidden" id="resultsSection">
+                <div class="results-header">
+                    <h2>Scan Results</h2>
+                    <div class="scan-summary" id="scanSummary">
+                        <!-- Filled dynamically -->
+                    </div>
+                </div>
+
+                <div class="vulnerabilities-list" id="vulnerabilitiesList">
+                    <!-- Filled dynamically -->
+                </div>
+
+                <div class="results-actions">
+                    <button id="newScanBtn" class="btn btn-primary">Start New Scan</button>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>ZeroMetus MVP v0.1.0 | Built with FastAPI + AI</p>
+        </footer>
+    </div>
+
+    <!-- Fix Modal -->
+    <div class="modal-overlay hidden" id="fixModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Vulnerability Details & Fix</h3>
+                <button class="modal-close" id="closeModal">&times;</button>
+            </div>
+            <div class="modal-content" id="modalContent">
+                <!-- Filled dynamically -->
+            </div>
+            <div class="modal-actions" id="modalActions">
+                <!-- Filled dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
