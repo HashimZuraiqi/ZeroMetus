@@ -25,6 +25,53 @@ from app.services.scanner.rules import get_rule_info
 router = APIRouter()
 
 
+@router.get("/vulnerabilities", response_model=VulnerabilitiesList)
+async def list_all_vulnerabilities(
+    severity: Optional[str] = Query(None, pattern="^(critical|high|medium|low|info)$"),
+    status: Optional[str] = Query(None),
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    List all vulnerabilities across all scans.
+    
+    Optionally filter by severity or status.
+    """
+    query = (
+        select(Vulnerability)
+        .options(joinedload(Vulnerability.file), joinedload(Vulnerability.fix))
+    )
+    
+    if severity:
+        query = query.where(Vulnerability.severity == severity)
+    
+    result = await db.execute(query)
+    vulns = result.unique().scalars().all()
+    
+    return VulnerabilitiesList(
+        scan_id=None,
+        total=len(vulns),
+        vulnerabilities=[
+            VulnerabilityResponse(
+                id=v.id,
+                vuln_type=v.vuln_type,
+                severity=v.severity,
+                file=FileInfo(
+                    id=v.file.id,
+                    filename=v.file.filename,
+                    filepath=v.file.filepath,
+                    language=v.file.language
+                ) if v.file else None,
+                line_start=v.line_start,
+                line_end=v.line_end,
+                code_snippet=v.code_snippet,
+                rule_id=v.rule_id,
+                has_fix=v.fix is not None
+            )
+            for v in vulns
+        ]
+    )
+
+
 @router.get("/scans/{scan_id}/vulnerabilities", response_model=VulnerabilitiesList)
 async def list_vulnerabilities(
     scan_id: str,

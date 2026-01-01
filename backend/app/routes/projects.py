@@ -55,6 +55,40 @@ async def create_project(
     )
 
 
+@router.get("/projects", response_model=List[ProjectResponse])
+async def list_projects(
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    List all projects.
+    """
+    result = await db.execute(select(Project))
+    projects = result.scalars().all()
+    
+    response = []
+    for project in projects:
+        # Get counts
+        files_count = await db.scalar(
+            select(func.count(CodeFile.id)).where(CodeFile.project_id == project.id)
+        )
+        scans_count = await db.scalar(
+            select(func.count(Scan.id)).where(Scan.project_id == project.id)
+        )
+        
+        response.append(ProjectResponse(
+            id=project.id,
+            name=project.name,
+            description=project.description,
+            source_type=project.source_type,
+            files_count=files_count or 0,
+            scans_count=scans_count or 0,
+            created_at=project.created_at,
+            updated_at=project.updated_at
+        ))
+    
+    return response
+
+
 @router.get("/projects/{project_id}", response_model=ProjectResponse)
 async def get_project(
     project_id: str,
@@ -186,3 +220,65 @@ async def list_files(
         )
         for f in files
     ]
+
+
+@router.get("/projects/{project_id}/scans")
+async def list_project_scans(
+    project_id: str,
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    List all scans for a project.
+    """
+    # Verify project exists
+    result = await db.execute(
+        select(Project).where(Project.id == project_id)
+    )
+    if not result.scalar_one_or_none():
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Project with ID '{project_id}' not found"
+        )
+    
+    # Get scans
+    result = await db.execute(
+        select(Scan).where(Scan.project_id == project_id).order_by(Scan.created_at.desc())
+    )
+    scans = result.scalars().all()
+    
+    return [
+        {
+            "id": s.id,
+            "status": s.status,
+            "started_at": s.started_at,
+            "completed_at": s.completed_at,
+            "created_at": s.created_at,
+            "vulnerability_count": s.vulnerability_count or 0
+        }
+        for s in scans
+    ]
+
+
+@router.delete("/projects/{project_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_project(
+    project_id: str,
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Delete a project and all associated data.
+    """
+    result = await db.execute(
+        select(Project).where(Project.id == project_id)
+    )
+    project = result.scalar_one_or_none()
+    
+    if not project:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Project with ID '{project_id}' not found"
+        )
+    
+    await db.delete(project)
+    await db.commit()
+    
+    return None
