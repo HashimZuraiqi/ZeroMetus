@@ -3,9 +3,34 @@
  * Manages login, signup, and session state
  */
 
-// Check if user is authenticated
+// Check if user is authenticated (has token)
 function isAuthenticated() {
     return !!localStorage.getItem('zerometus_token');
+}
+
+// Verify token is valid with the backend
+async function verifyAuthentication() {
+    if (!isAuthenticated()) {
+        return false;
+    }
+    
+    try {
+        // Verify token with backend
+        const user = await api.getCurrentUser();
+        if (user && user.id) {
+            storeUser(user);
+            return true;
+        }
+        // Token is invalid
+        clearAuth();
+        return false;
+    } catch (error) {
+        console.error('Token verification failed:', error);
+        if (error.status === 401) {
+            clearAuth();
+        }
+        return false;
+    }
 }
 
 // Get stored user data
@@ -32,6 +57,34 @@ function requireAuth() {
         return false;
     }
     return true;
+}
+
+// Async version that verifies token with backend
+async function requireAuthAsync() {
+    if (!isAuthenticated()) {
+        window.location.href = 'login.html';
+        return false;
+    }
+    
+    try {
+        // Verify token with backend
+        const user = await api.getCurrentUser();
+        if (user && user.id) {
+            storeUser(user);
+            return true;
+        }
+        // Token is invalid
+        clearAuth();
+        window.location.href = 'login.html';
+        return false;
+    } catch (error) {
+        console.error('Auth verification failed:', error);
+        if (error.status === 401) {
+            clearAuth();
+            window.location.href = 'login.html';
+        }
+        return false;
+    }
 }
 
 // Redirect to dashboard if already authenticated

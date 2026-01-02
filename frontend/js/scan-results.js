@@ -6,6 +6,7 @@
 const scanState = {
     scan: null,
     vulnerabilities: [],
+    user: null,
     isLoading: true
 };
 
@@ -17,7 +18,11 @@ function getScanId() {
 
 // Initialize scan results page
 async function initScanResultsPage() {
-    if (!requireAuth()) return;
+    // Check if token exists
+    if (!isAuthenticated()) {
+        window.location.href = 'login.html';
+        return;
+    }
     
     const scanId = getScanId();
     if (!scanId) {
@@ -28,6 +33,9 @@ async function initScanResultsPage() {
     showLoading(true);
     
     try {
+        // Load user data for display
+        await loadUserData();
+        
         // Load scan data
         const scan = await api.getScan(scanId);
         scanState.scan = scan;
@@ -58,6 +66,51 @@ async function initScanResultsPage() {
     }
 }
 
+// Load user data (also verifies token validity)
+async function loadUserData() {
+    try {
+        const user = await api.getCurrentUser();
+        scanState.user = user;
+        storeUser(user);
+        updateUserUI(user);
+    } catch (error) {
+        console.error('Failed to load user:', error);
+        // If 401, token is invalid - redirect to login
+        if (error.status === 401) {
+            clearAuth();
+            window.location.href = 'login.html';
+            return;
+        }
+        const storedUser = getStoredUser();
+        if (storedUser) {
+            scanState.user = storedUser;
+            updateUserUI(storedUser);
+        }
+    }
+}
+
+// Update user UI elements
+function updateUserUI(user) {
+    document.querySelectorAll('.user-name, #user-name').forEach(el => {
+        el.textContent = user.display_name || user.email;
+    });
+    
+    document.querySelectorAll('.user-avatar, #user-avatar').forEach(el => {
+        const initials = getInitials(user.display_name || user.email);
+        el.textContent = initials;
+    });
+}
+
+// Get initials from name
+function getInitials(name) {
+    if (!name) return '?';
+    return name
+        .split(' ')
+        .map(part => part[0])
+        .join('')
+        .toUpperCase()
+        .slice(0, 2);
+}
 // Load scan vulnerabilities
 async function loadScanVulnerabilities(scanId) {
     try {
@@ -105,7 +158,14 @@ function renderScanStats() {
     const medium = vulnerabilities.filter(v => v.severity === 'medium').length;
     const low = vulnerabilities.filter(v => v.severity === 'low').length;
     
+    // Try both ID formats for compatibility
     updateStat('total-count', total);
+    updateStat('count-critical', critical);
+    updateStat('count-high', high);
+    updateStat('count-medium', medium);
+    updateStat('count-low', low);
+    
+    // Legacy ID format
     updateStat('critical-count', critical);
     updateStat('high-count', high);
     updateStat('medium-count', medium);
@@ -120,7 +180,7 @@ function updateStat(id, value) {
 
 // Render vulnerabilities list
 function renderVulnerabilities() {
-    const container = document.getElementById('vulnerabilities-list');
+    const container = document.getElementById('vulnerabilities-list') || document.getElementById('findings-list');
     if (!container) return;
     
     const { vulnerabilities } = scanState;

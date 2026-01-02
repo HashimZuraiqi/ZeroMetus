@@ -253,7 +253,7 @@ async def list_project_scans(
             "started_at": s.started_at,
             "completed_at": s.completed_at,
             "created_at": s.created_at,
-            "vulnerability_count": s.vulnerability_count or 0
+            "total_vulns": s.total_vulns or 0
         }
         for s in scans
     ]

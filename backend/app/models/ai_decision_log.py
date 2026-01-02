@@ -44,7 +44,7 @@ class AIDecisionLog(Base):
     
     # Model info
     model_name: Mapped[str] = mapped_column(String(100), nullable=False)
-    prompt_hash: Mapped[str] = mapped_column(String(64), nullable=False)
+    prompt_hash: Mapped[str | None] = mapped_column(String(64), nullable=True)
     
     # Usage stats
     input_tokens: Mapped[int | None] = mapped_column(Integer, nullable=True)

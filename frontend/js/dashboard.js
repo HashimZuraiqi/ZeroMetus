@@ -24,13 +24,16 @@ const dashboardState = {
 
 // Initialize dashboard
 async function initDashboard() {
-    // Check authentication
-    if (!requireAuth()) return;
+    // Check authentication - verify token with backend
+    if (!isAuthenticated()) {
+        window.location.href = 'login.html';
+        return;
+    }
     
     showLoadingState(true);
     
     try {
-        // Load user data
+        // Load user data (this also verifies the token)
         await loadUserData();
         
         // Load dashboard data in parallel
@@ -64,7 +67,7 @@ async function initDashboard() {
     }
 }
 
-// Load user data
+// Load user data (also verifies token validity)
 async function loadUserData() {
     try {
         const user = await api.getCurrentUser();
@@ -73,6 +76,12 @@ async function loadUserData() {
         updateUserUI(user);
     } catch (error) {
         console.error('Failed to load user:', error);
+        // If 401, token is invalid - redirect to login
+        if (error.status === 401) {
+            clearAuth();
+            window.location.href = 'login.html';
+            return;
+        }
         throw error;
     }
 }

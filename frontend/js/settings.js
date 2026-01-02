@@ -10,12 +10,17 @@ const settingsState = {
 
 // Initialize settings page
 async function initSettingsPage() {
-    if (!requireAuth()) return;
+    // Check if token exists
+    if (!isAuthenticated()) {
+        window.location.href = 'login.html';
+        return;
+    }
     
     try {
-        // Load user data
+        // Load user data (also verifies token validity)
         const user = await api.getCurrentUser();
         settingsState.user = user;
+        storeUser(user);
         
         // Populate form
         populateUserForm(user);

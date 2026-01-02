@@ -118,3 +118,72 @@ async def submit_decision(
         decided_at=fix.decided_at,
         message="Decision recorded successfully"
     )
+
+
+@router.post("/fixes/{fix_id}/accept", response_model=FixDecisionResponse)
+async def accept_fix(
+    fix_id: str,
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Accept a fix.
+    """
+    result = await db.execute(
+        select(Fix).where(Fix.id == fix_id)
+    )
+    fix = result.scalar_one_or_none()
+    
+    if not fix:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Fix with ID '{fix_id}' not found"
+        )
+    
+    fix.user_decision = "accept"
+    fix.status = "approved"
+    fix.decided_at = datetime.utcnow()
+    
+    await db.commit()
+    await db.refresh(fix)
+    
+    return FixDecisionResponse(
+        id=fix.id,
+        status=fix.status,
+        user_decision=fix.user_decision,
+        decision_reason=None,
+        decided_at=fix.decided_at,
+        message="Fix accepted successfully"
+    )
+
+
+@router.post("/fixes/{fix_id}/reject")
+async def reject_fix(
+    fix_id: str,
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Reject a fix with optional feedback.
+    """
+    result = await db.execute(
+        select(Fix).where(Fix.id == fix_id)
+    )
+    fix = result.scalar_one_or_none()
+    
+    if not fix:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Fix with ID '{fix_id}' not found"
+        )
+    
+    fix.user_decision = "reject"
+    fix.status = "rejected"
+    fix.decided_at = datetime.utcnow()
+    
+    await db.commit()
+    await db.refresh(fix)
+    
+    return {
+        "id": fix.id,
+        "status": fix.status,
+        "message": "Fix rejected successfully"
+    }

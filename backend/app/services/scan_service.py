@@ -102,15 +102,19 @@ async def run_scan(
                     db.add(vuln)
                     await db.flush()
                     
-                    # Generate AI fix if enabled
-                    if include_ai_fixes and settings.openai_api_key:
-                        await generate_ai_fix(
-                            db=db,
-                            vulnerability=vuln,
-                            file_content=file.content,
-                            context_before=finding.context_before,
-                            context_after=finding.context_after
-                        )
+                    # Generate AI fix if enabled (non-blocking)
+                    if include_ai_fixes:
+                        try:
+                            await generate_ai_fix(
+                                db=db,
+                                vulnerability=vuln,
+                                file_content=file.content,
+                                context_before=finding.context_before,
+                                context_after=finding.context_after
+                            )
+                        except Exception as fix_error:
+                            # Don't fail the scan if AI fix generation fails
+                            print(f"AI fix generation skipped: {fix_error}")
                     
                     total_vulns += 1
             
@@ -173,15 +177,23 @@ async def generate_ai_fix(
             db.add(fix)
             await db.flush()
             
-            # Log AI decision
-            await ai_agent.log_decision(
-                db=db,
-                fix_id=fix.id,
-                response=fix_proposal
-            )
+            # Log AI decision (optional - don't fail if logging fails)
+            try:
+                await ai_agent.log_decision(
+                    db=db,
+                    fix_id=fix.id,
+                    response=fix_proposal
+                )
+            except Exception as log_error:
+                print(f"AI decision logging failed (non-critical): {log_error}")
             
             return fix
     except Exception as e:
         # Don't fail the scan if AI fix generation fails
         print(f"AI fix generation failed: {e}")
+        # Rollback any pending changes from this function
+        try:
+            await db.rollback()
+        except:
+            pass
         return None

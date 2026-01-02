@@ -412,10 +412,76 @@ def get_rules_for_language(language: str) -> List[SecurityRule]:
     ]
 
 
+# Vulnerability type metadata for recommendations and impact
+VULN_TYPE_META = {
+    "SQL_INJECTION": {
+        "recommendation": "Use parameterized queries or prepared statements. Never concatenate user input directly into SQL queries.",
+        "impact": "Attackers could read, modify, or delete database contents. May lead to full system compromise."
+    },
+    "XSS": {
+        "recommendation": "Sanitize and encode all user-provided content before rendering. Use Content Security Policy headers.",
+        "impact": "Attackers could steal user sessions, credentials, or perform actions on behalf of users."
+    },
+    "COMMAND_INJECTION": {
+        "recommendation": "Avoid shell commands with user input. Use language-native functions or strict input validation.",
+        "impact": "Attackers could execute arbitrary commands on the server, leading to full system compromise."
+    },
+    "PATH_TRAVERSAL": {
+        "recommendation": "Validate file paths against an allowlist. Use secure path joining functions and sanitize user input.",
+        "impact": "Attackers could read sensitive files or write malicious files to the system."
+    },
+    "INSECURE_DESERIALIZATION": {
+        "recommendation": "Never deserialize untrusted data. Use safe serialization formats like JSON with strict schemas.",
+        "impact": "Attackers could execute arbitrary code or manipulate application logic."
+    },
+    "HARDCODED_SECRET": {
+        "recommendation": "Store secrets in environment variables or secret management systems. Never commit secrets to code.",
+        "impact": "Exposed credentials could lead to unauthorized access to systems and data breaches."
+    },
+    "WEAK_CRYPTO": {
+        "recommendation": "Use modern cryptographic algorithms (AES-256, SHA-256 or better). Avoid deprecated algorithms.",
+        "impact": "Attackers could decrypt sensitive data or forge authentication tokens."
+    },
+    "INSECURE_RANDOM": {
+        "recommendation": "Use cryptographically secure random number generators for security-sensitive operations.",
+        "impact": "Attackers could predict tokens, session IDs, or other security-critical values."
+    },
+    "OPEN_REDIRECT": {
+        "recommendation": "Validate redirect URLs against an allowlist of trusted domains.",
+        "impact": "Attackers could redirect users to malicious sites for phishing or malware."
+    },
+    "SSRF": {
+        "recommendation": "Validate and sanitize URLs. Use allowlists for permitted hosts and protocols.",
+        "impact": "Attackers could access internal services or exfiltrate data from internal networks."
+    },
+    "XXE": {
+        "recommendation": "Disable external entity processing in XML parsers. Use defused XML libraries.",
+        "impact": "Attackers could read files, perform SSRF, or cause denial of service."
+    },
+    "LDAP_INJECTION": {
+        "recommendation": "Use parameterized LDAP queries. Properly escape special characters in user input.",
+        "impact": "Attackers could bypass authentication or access unauthorized directory information."
+    },
+    "HEADER_INJECTION": {
+        "recommendation": "Validate and sanitize header values. Remove newline characters from user input.",
+        "impact": "Attackers could inject malicious headers, leading to cache poisoning or XSS."
+    },
+    "PROTOTYPE_POLLUTION": {
+        "recommendation": "Freeze Object.prototype. Avoid recursive merging of untrusted objects.",
+        "impact": "Attackers could modify application behavior or bypass security controls."
+    },
+    "EVAL_INJECTION": {
+        "recommendation": "Never use eval() with user input. Use safe alternatives like JSON.parse().",
+        "impact": "Attackers could execute arbitrary code in the application context."
+    },
+}
+
+
 def get_rule_info(rule_id: str) -> Dict[str, Any]:
     """Get detailed information about a specific rule."""
     for rule in SECURITY_RULES:
         if rule.id == rule_id:
+            vuln_meta = VULN_TYPE_META.get(rule.vuln_type, {})
             return {
                 "id": rule.id,
                 "name": rule.name,
@@ -423,12 +489,16 @@ def get_rule_info(rule_id: str) -> Dict[str, Any]:
                 "vuln_type": rule.vuln_type,
                 "severity": rule.severity,
                 "cwe_id": rule.cwe_id,
-                "languages": rule.languages
+                "languages": rule.languages,
+                "recommendation": vuln_meta.get("recommendation", "Review and fix the vulnerable code."),
+                "impact": vuln_meta.get("impact", "Could allow attackers to compromise the system.")
             }
     return {
         "id": rule_id,
         "name": rule_id,
-        "description": "Unknown rule"
+        "description": "Unknown rule",
+        "recommendation": "Review and fix the vulnerable code.",
+        "impact": "Could allow attackers to compromise the system."
     }
 
 

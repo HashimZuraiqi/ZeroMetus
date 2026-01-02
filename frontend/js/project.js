@@ -7,6 +7,7 @@ const projectState = {
     project: null,
     scans: [],
     files: [],
+    user: null,
     isLoading: true
 };
 
@@ -18,7 +19,11 @@ function getProjectId() {
 
 // Initialize project page
 async function initProjectPage() {
-    if (!requireAuth()) return;
+    // Check if token exists
+    if (!isAuthenticated()) {
+        window.location.href = 'login.html';
+        return;
+    }
     
     const projectId = getProjectId();
     if (!projectId) {
@@ -29,6 +34,9 @@ async function initProjectPage() {
     showLoading(true);
     
     try {
+        // Load user data for display
+        await loadUserData();
+        
         // Load project data
         const project = await api.getProject(projectId);
         projectState.project = project;
@@ -55,6 +63,55 @@ async function initProjectPage() {
     } finally {
         showLoading(false);
     }
+}
+
+// Load user data (also verifies token validity)
+async function loadUserData() {
+    try {
+        const user = await api.getCurrentUser();
+        projectState.user = user;
+        storeUser(user);
+        updateUserUI(user);
+    } catch (error) {
+        console.error('Failed to load user:', error);
+        // If 401, token is invalid - redirect to login
+        if (error.status === 401) {
+            clearAuth();
+            window.location.href = 'login.html';
+            return;
+        }
+        // Try stored user for other errors
+        const storedUser = getStoredUser();
+        if (storedUser) {
+            projectState.user = storedUser;
+            updateUserUI(storedUser);
+        }
+    }
+}
+
+// Update user UI elements
+function updateUserUI(user) {
+    // Update user name displays
+    document.querySelectorAll('.user-name, #user-name').forEach(el => {
+        el.textContent = user.display_name || user.email;
+    });
+    
+    // Update user avatar
+    document.querySelectorAll('.user-avatar, #user-avatar').forEach(el => {
+        const initials = getInitials(user.display_name || user.email);
+        el.textContent = initials;
+    });
+}
+
+// Get initials from name
+function getInitials(name) {
+    if (!name) return '?';
+    return name
+        .split(' ')
+        .map(part => part[0])
+        .join('')
+        .toUpperCase()
+        .slice(0, 2);
 }
 
 // Load project scans
