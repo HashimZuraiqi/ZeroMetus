@@ -30,9 +30,9 @@ class Settings(BaseSettings):
     openai_model: str = "gpt-4"
     
     # Security
-    secret_key: str = "dev-secret-key-change-in-production"
-    algorithm: str = "HS256"
-    access_token_expire_minutes: int = 30
+    SECRET_KEY: str = "dev-secret-key-change-in-production"
+    ALGORITHM: str = "HS256"
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     
     # CORS
     cors_origins: str = "http://localhost:3000,http://127.0.0.1:3000"
