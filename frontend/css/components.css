@@ -1,0 +1,495 @@
+/* ==========================================================================
+   ZEROMETUS COMPONENTS
+   Reusable UI components built on design tokens
+   ========================================================================== */
+
+@import 'design-tokens.css';
+
+/* ==========================================================================
+   BUTTONS
+   ========================================================================== */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-2-5) var(--space-4);
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  font-weight: var(--font-medium);
+  line-height: var(--leading-tight);
+  text-decoration: none;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--duration-normal) var(--ease-default);
+  white-space: nowrap;
+  user-select: none;
+}
+
+.btn:focus-visible {
+  outline: none;
+  box-shadow: var(--glow-primary);
+}
+
+.btn:disabled,
+.btn[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.btn svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+/* Primary */
+.btn-primary {
+  background: var(--color-primary-500);
+  color: var(--color-text-primary);
+  border-color: var(--color-primary-500);
+}
+
+.btn-primary:hover {
+  background: var(--color-primary-400);
+  border-color: var(--color-primary-400);
+}
+
+.btn-primary:active {
+  background: var(--color-primary-600);
+  border-color: var(--color-primary-600);
+}
+
+/* Secondary */
+.btn-secondary {
+  background: var(--color-surface-primary);
+  color: var(--color-text-primary);
+  border-color: var(--color-border-primary);
+}
+
+.btn-secondary:hover {
+  background: var(--color-surface-hover);
+  border-color: var(--color-border-primary);
+}
+
+.btn-secondary:active {
+  background: var(--color-surface-active);
+}
+
+/* Danger */
+.btn-danger {
+  background: var(--color-danger);
+  color: var(--color-text-primary);
+  border-color: var(--color-danger);
+}
+
+.btn-danger:hover {
+  background: #da3633;
+  border-color: #da3633;
+}
+
+.btn-danger:active {
+  background: #b62324;
+  border-color: #b62324;
+}
+
+.btn-danger:focus-visible {
+  box-shadow: var(--glow-danger);
+}
+
+/* Ghost */
+.btn-ghost {
+  background: transparent;
+  color: var(--color-text-secondary);
+  border-color: transparent;
+}
+
+.btn-ghost:hover {
+  background: var(--color-surface-hover);
+  color: var(--color-text-primary);
+}
+
+/* Icon-only */
+.btn-icon {
+  padding: var(--space-2);
+  background: transparent;
+  color: var(--color-text-secondary);
+  border-color: transparent;
+}
+
+.btn-icon:hover {
+  background: var(--color-surface-hover);
+  color: var(--color-text-primary);
+}
+
+/* Sizes */
+.btn-sm {
+  padding: var(--space-1-5) var(--space-3);
+  font-size: var(--text-sm);
+}
+
+.btn-sm svg {
+  width: 14px;
+  height: 14px;
+}
+
+.btn-lg {
+  padding: var(--space-3) var(--space-6);
+  font-size: var(--text-md);
+}
+
+.btn-lg svg {
+  width: 20px;
+  height: 20px;
+}
+
+.btn-full {
+  width: 100%;
+}
+
+/* Button with loader */
+.btn .btn-loader {
+  display: none;
+}
+
+.btn.loading .btn-text {
+  visibility: hidden;
+}
+
+.btn.loading .btn-loader {
+  display: block;
+  position: absolute;
+}
+
+.btn.loading {
+  position: relative;
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   CARDS
+   ========================================================================== */
+
+.card {
+  background: var(--color-surface-primary);
+  border: 1px solid var(--color-border-primary);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-4) var(--space-5);
+  border-bottom: 1px solid var(--color-border-primary);
+}
+
+.card-header h2,
+.card-header h3 {
+  font-size: var(--text-md);
+  font-weight: var(--font-semibold);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.card-header-action {
+  font-size: var(--text-sm);
+  color: var(--color-text-link);
+  text-decoration: none;
+}
+
+.card-header-action:hover {
+  text-decoration: underline;
+}
+
+.card-body {
+  padding: var(--space-5);
+}
+
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
+  border-top: 1px solid var(--color-border-primary);
+  background: var(--color-bg-secondary);
+}
+
+/* Card variants */
+.card-elevated {
+  box-shadow: var(--elevation-2);
+  border-color: var(--color-border-secondary);
+}
+
+.card-interactive {
+  cursor: pointer;
+  transition: border-color var(--duration-normal) var(--ease-default),
+              box-shadow var(--duration-normal) var(--ease-default);
+}
+
+.card-interactive:hover {
+  border-color: var(--color-border-focus);
+}
+
+.card-interactive:focus-visible {
+  outline: none;
+  box-shadow: var(--glow-secondary);
+}
+
+/* Severity-bordered cards */
+.card-critical {
+  border-left: 3px solid var(--color-critical);
+}
+
+.card-high {
+  border-left: 3px solid var(--color-high);
+}
+
+.card-medium {
+  border-left: 3px solid var(--color-medium);
+}
+
+.card-low {
+  border-left: 3px solid var(--color-low);
+}
+
+/* ==========================================================================
+   BADGES
+   ========================================================================== */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-0-5) var(--space-2);
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  font-weight: var(--font-semibold);
+  line-height: var(--leading-normal);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+}
+
+.badge svg {
+  width: 12px;
+  height: 12px;
+}
+
+/* Severity badges */
+.badge-critical {
+  background: var(--color-critical);
+  color: white;
+}
+
+.badge-high {
+  background: var(--color-high);
+  color: white;
+}
+
+.badge-medium {
+  background: var(--color-medium);
+  color: var(--color-text-inverse);
+}
+
+.badge-low {
+  background: var(--color-low);
+  color: var(--color-text-inverse);
+}
+
+.badge-info {
+  background: var(--color-info);
+  color: white;
+}
+
+/* Subtle severity badges */
+.badge-critical-subtle {
+  background: var(--color-critical-subtle);
+  color: var(--color-critical);
+}
+
+.badge-high-subtle {
+  background: var(--color-high-subtle);
+  color: var(--color-high);
+}
+
+.badge-medium-subtle {
+  background: var(--color-medium-subtle);
+  color: var(--color-medium);
+}
+
+.badge-low-subtle {
+  background: var(--color-low-subtle);
+  color: var(--color-low);
+}
+
+.badge-info-subtle {
+  background: var(--color-info-subtle);
+  color: var(--color-info);
+}
+
+/* Status badges */
+.badge-success {
+  background: var(--color-success-subtle);
+  color: var(--color-success);
+}
+
+.badge-warning {
+  background: var(--color-warning-subtle);
+  color: var(--color-warning);
+}
+
+.badge-danger {
+  background: var(--color-danger-subtle);
+  color: var(--color-danger);
+}
+
+.badge-neutral {
+  background: var(--color-surface-hover);
+  color: var(--color-text-secondary);
+}
+
+/* Badge sizes */
+.badge-lg {
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--text-sm);
+}
+
+/* Badge with dot indicator */
+.badge-dot {
+  padding-left: var(--space-1-5);
+}
+
+.badge-dot::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-full);
+  background: currentColor;
+}
+
+/* ==========================================================================
+   ALERTS
+   ========================================================================== */
+
+.alert {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+}
+
+.alert-icon {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+}
+
+.alert-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.alert-title {
+  font-weight: var(--font-semibold);
+  margin-bottom: var(--space-1);
+}
+
+.alert-description {
+  font-size: var(--text-sm);
+  line-height: var(--leading-relaxed);
+  opacity: 0.9;
+}
+
+.alert-actions {
+  display: flex;
+  gap: var(--space-3);
+  margin-top: var(--space-3);
+}
+
+.alert-dismiss {
+  flex-shrink: 0;
+  padding: var(--space-1);
+  margin: calc(var(--space-1) * -1);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity var(--duration-fast);
+}
+
+.alert-dismiss:hover {
+  opacity: 1;
+}
+
+.alert-dismiss svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Alert variants */
+.alert-info {
+  background: var(--color-info-subtle);
+  border-color: rgba(88, 166, 255, 0.3);
+  color: var(--color-text-primary);
+}
+
+.alert-info .alert-icon {
+  color: var(--color-info);
+}
+
+.alert-success {
+  background: var(--color-success-subtle);
+  border-color: rgba(63, 185, 80, 0.3);
+  color: var(--color-text-primary);
+}
+
+.alert-success .alert-icon {
+  color: var(--color-success);
+}
+
+.alert-warning {
+  background: var(--color-warning-subtle);
+  border-color: rgba(210, 153, 34, 0.3);
+  color: var(--color-text-primary);
+}
+
+.alert-warning .alert-icon {
+  color: var(--color-warning);
+}
+
+.alert-danger {
+  background: var(--color-danger-subtle);
+  border-color: rgba(248, 81, 73, 0.3);
+  color: var(--color-text-primary);
+}
+
+.alert-danger .alert-icon {
+  color: var(--color-danger);
+}
+
+/* Inline alert (minimal) */
+.alert-inline {
+  padding: var(--space-3);
+  border-radius: var(--radius-sm);
+}
+
+.alert-inline .alert-icon {
+  width: 16px;
+  height: 16px;
+}
+
+/* Banner alert (full-width) */
+.alert-banner {
+  border-radius: 0;
+  border-left: none;
+  border-right: none;
+}
